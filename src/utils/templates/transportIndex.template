@@ -1,0 +1,6 @@
+import { Interceptors } from "../../base/transports.types";
+
+export default class {{Name}}Transport {
+  constructor(baseUrl: string, interceptors?: Interceptors) {
+  }
+}
