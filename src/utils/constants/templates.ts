@@ -1,3 +1,5 @@
+import { RequestMethod } from "@src/@types";
+
 export const transportsIndexTemplate = `import transports from "./transports";
 
 export default transports;
@@ -79,12 +81,20 @@ export type TransportAxiosRequest<Body, Param, Query> = OptionalBody<Body> &
   OptionalQuery<Query>;
 
 type OptionalParam<Param> = Param extends undefined | null
-  ? {}
+  ? { param?: undefined }
+  : keyof Param extends never
+  ? { param?: undefined }
   : { param: Param };
 type OptionalQuery<Query> = Query extends undefined | null
-  ? {}
+  ? { query?: undefined }
+  : keyof Query extends never
+  ? { query?: undefined }
   : { query: Query };
-type OptionalBody<Body> = Body extends undefined | null ? {} : { body: Body };
+type OptionalBody<Body> = Body extends undefined | null
+  ? { body?: undefined }
+  : keyof Body extends never
+  ? { body?: undefined }
+  : { body: Body };
 
 export interface Interceptors {
   handleResponse?: ({ data }: AxiosResponse) => any;
@@ -95,5 +105,50 @@ export interface Interceptors {
     | Promise<InternalAxiosRequestConfig<any>>;
   handleError?: (error: AxiosError) => any;
 }
-
 `;
+
+type RequestTemplateProps = {
+  name: string;
+  Name: string;
+  method: RequestMethod;
+  ClientName: string;
+};
+export const requestTemplate = ({
+  name,
+  Name,
+  method,
+  ClientName,
+}: RequestTemplateProps) => {
+  const bodyAllowed =
+    method === "post" || method === "patch" || method === "put";
+  const body = bodyAllowed ? ", body" : "";
+  return `import ${ClientName}Client from "..";
+import { TransportAxiosRequest } from "../../../../base/transports.types";
+
+export async function ${name}(
+  this: ${ClientName}Client,
+  requestProps: ${Name}Props
+) {
+  const { param, query${body} } = requestProps;
+  try {
+    const { data } = await this.instance.${method}<${Name}Return>("/"${body});
+    return data;
+  } catch (error) {
+    console.dir({ error, requestProps });
+    throw error;
+  }
+}
+
+type ${Name}Body = {}; // define body
+type ${Name}Param = {}; // define param
+type ${Name}Query = {}; // define query
+
+export type ${Name}Props = TransportAxiosRequest<
+  ${Name}Body,
+  ${Name}Param,
+  ${Name}Query
+>;
+
+export type ${Name}Return = Promise<undefined>; // define return 
+`;
+};

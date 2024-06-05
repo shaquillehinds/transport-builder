@@ -1,3 +1,8 @@
+import {
+  userRequests,
+  UserRequestsProps,
+  UserRequestsReturn,
+} from "./requests";
 import { defaultInterceptors } from "../../../base/interceptors";
 import HttpClient from "../../../base/HttpClient";
 import { Interceptors } from "../../../base/transports.types";

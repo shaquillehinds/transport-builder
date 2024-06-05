@@ -1,0 +1,27 @@
+import {{ClientName}}Client from "..";
+import { TransportAxiosRequest } from "../../../../base/transports.types";
+
+export async function {{name}}(
+  this: {{ClientName}}Client,
+  requestProps: {{Name}}Props
+) {
+  const { body, param, query } = requestProps;
+  try {
+    const { data } = await this.instance.{{method}}<{{Name}}Return>("/");
+    return data;
+  } catch (error) {
+    console.dir({ error, requestProps });
+  }
+}
+
+type {{Name}}Body = undefined; // define dto
+type {{Name}}Param = undefined; // define param
+type {{Name}}Query = undefined; // define query
+
+export type {{Name}}Props = TransportAxiosRequest<
+  {{Name}}Body,
+  {{Name}}Param,
+  {{Name}}Query
+>;
+
+export type {{Name}}Return = Promise<undefined>; // define return 

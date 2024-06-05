@@ -27,7 +27,7 @@ export default async function restClientInjector(props: ClientInjectorProps) {
     )
     .injectClassConstructor(
       {
-        stringTemplate: `this.${name} = new ${Name}Client(baseUrl + "/${name}", interceptors);`,
+        stringTemplate: `this.${name} = new ${Name}Client(baseUrl + "/${name}", interceptors); // make sure the endpoint is correct`,
       },
       { name: `${TransportName}Transport` }
     )
@@ -35,7 +35,10 @@ export default async function restClientInjector(props: ClientInjectorProps) {
     .injectFileFromTemplate({
       newFilePath: `src/transports/REST/${props.transportName}/${name}/index.ts`,
       templatePath: templatePath("clientIndex"),
-      replaceKeywords: [{ keyword: "{{Name}}", replacement: Name }],
+      replaceKeywords: [
+        { keyword: "{{Name}}", replacement: Name },
+        { keyword: "{{name}}", replacement: name },
+      ],
     })
     .injectDirectory(
       `src/transports/REST/${props.transportName}/${name}/requests`
@@ -45,7 +48,7 @@ export default async function restClientInjector(props: ClientInjectorProps) {
       templatePath: templatePath("requestsIndex"),
       replaceKeywords: [
         { keyword: "{{Name}}", replacement: Name },
-        { keyword: "{{name}}", replacement: Name },
+        { keyword: "{{name}}", replacement: name },
       ],
     })
     .finish([`src/transports/REST/${props.transportName}/index.ts`]);

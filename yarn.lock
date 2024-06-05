@@ -1989,10 +1989,10 @@ tsc-alias@^1.8.7:
     normalize-path "^3.0.0"
     plimit-lit "^1.2.6"
 
-tscodeinject@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/tscodeinject/-/tscodeinject-2.1.0.tgz#8699553bc5e3dea6e8f6739e16538c01b876c70f"
-  integrity sha512-CjHYEMcS3TuigtcQjI0u/eg7u12Mv634Z6xRDK6E4CRv7U41NFIdYkQVZrs2P8udPuTcbUcHDf2HHsXbnMSR5w==
+tscodeinject@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/tscodeinject/-/tscodeinject-2.2.0.tgz#3472ea4f7ea1bc9b90f3f6d64af7638cb37e4542"
+  integrity sha512-wHiRBuVw+aDp/Hr9JrN5v7AITewAGsTELMFNAsQNP6WgFPBAT0oSyaTS1jhJO8parKFigbyqi4zKaip1vFHR4g==
   dependencies:
     chalk "^5.3.0"
     chalk-animation "^2.0.3"

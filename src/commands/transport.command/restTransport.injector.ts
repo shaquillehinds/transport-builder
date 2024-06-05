@@ -29,7 +29,9 @@ export default async function restTransportInjector(
       isDefault: true,
     })
     .injectProperty(
-      { property: `${name}: new ${Name}Transport("")` },
+      {
+        property: `${name}: new ${Name}Transport("") // add the server url for this transport`,
+      },
       { name: "transports" }
     )
     .injectDirectory(`src/transports/REST/${name}`)

@@ -1,3 +1,5 @@
 export const {{name}}Requests = { };
 
 export namespace {{Name}}RequestsProps { }
+
+export namespace {{Name}}RequestsReturn { }

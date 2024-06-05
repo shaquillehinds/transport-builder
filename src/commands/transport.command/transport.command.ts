@@ -4,39 +4,36 @@ import checkFiles from "../../utils/fileChecker";
 import * as rf from "../../utils/requiredFiles";
 import checkPackages from "../../utils/packageChecker";
 import restTransportInjector from "./restTransport.injector";
+import transportPrompt from "./transport.prompt";
 
 export default function transportCommand(program: Command) {
   program
-    .command("transport <rest|graphql> <add> <transportName>")
+    .command("transport [rest|graphql] [transportName]")
     .description("Adds a new transport")
-    .action(async (type, method, name) => {
+    .action(async (type, name) => {
+      if (!type) type = await transportPrompt.transportType();
       if (!type)
         throw new Error(
           'Please provide the type of transport "transport <rest|graphql>"'
         );
-      if (!method)
-        throw new Error(
-          'Please provide the method of operation "transport <rest|graphq> add"'
-        );
+      if (!name) name = await transportPrompt.transportName();
       if (!name)
         throw new Error(
-          'Please provide the name of the new transport "transport <rest|graphq> add <transportName>"'
+          `Please provide the name of the new transport "transport ${type} <transportName>"`
         );
-      if (method === "add") {
-        checkFiles({
-          requiredFiles: rf.requiredFiles,
-          requiredFolders: rf.requiredFolders,
-          autoCreate: {
-            files: rf.requiredFilesContent,
-            folders: rf.requiredFolders,
-          },
-        });
-        checkPackages({ requiredPackages: [{ name: "axios" }] });
-        if (type === "rest") {
-          if (fs.existsSync("src/transports/REST/" + name))
-            throw new Error(name + " already created");
-          await restTransportInjector({ name });
-        }
+      checkFiles({
+        requiredFiles: rf.requiredFiles,
+        requiredFolders: rf.requiredFolders,
+        autoCreate: {
+          files: rf.requiredFilesContent,
+          folders: rf.requiredFolders,
+        },
+      });
+      checkPackages({ requiredPackages: [{ name: "axios" }] });
+      if (type === "rest") {
+        if (fs.existsSync("src/transports/REST/" + name))
+          throw new Error(name + " already created");
+        await restTransportInjector({ name });
       }
       process.exit(0);
     });
