@@ -1,3 +1,5 @@
+import { TransportType } from "@src/@types";
+import namesRetriever from "@src/utils/namesRetriever";
 import inquirer from "inquirer";
 // client <rest|graphql> <transportName> <clientName>
 
@@ -27,6 +29,23 @@ const requestMethod = async () =>
     })
   ).requestMethod;
 
-const requestPrompt = { requestName, requestMethod };
+const clientName = async (type: TransportType, transportName: string) =>
+  (
+    await inquirer.prompt({
+      name: "clientName",
+      type: "list",
+      message: "Select the client this request belongs to:",
+      loop: true,
+      choices: namesRetriever({
+        dirPath: `src/transports/${
+          type === "graphql" ? "GRAPHQL" : "REST"
+        }/${transportName}`,
+        rmIndex: true,
+        rmExt: true,
+      }).map((f) => ({ name: f, value: f })),
+    })
+  ).clientName;
+
+const requestPrompt = { requestName, requestMethod, clientName };
 
 export default requestPrompt;

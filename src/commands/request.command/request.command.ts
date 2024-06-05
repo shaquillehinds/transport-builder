@@ -19,12 +19,13 @@ export default function requestCommand(program: Command) {
             'Please provide the type of transport "request <rest|graphql>"'
           );
         if (!transportName)
-          transportName = await transportPrompt.transportName();
+          transportName = await clientPrompt.transportName(type);
         if (!transportName)
           throw new Error(
             `Please provide the name of the transport "request ${type} <transportName>"`
           );
-        if (!clientName) clientName = await clientPrompt.clientName();
+        if (!clientName)
+          clientName = await requestPrompt.clientName(type, transportName);
         if (!clientName)
           throw new Error(
             `Please provide the name of the client "request ${type} ${transportName} <clientName>"`
