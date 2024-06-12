@@ -4,6 +4,7 @@ import InjectionPipeline from "tscodeinject";
 interface ClientInjectorProps {
   transportName: string;
   clientName: string;
+  disableOpenFiles?: boolean;
 }
 
 export default async function restClientInjector(props: ClientInjectorProps) {
@@ -51,5 +52,9 @@ export default async function restClientInjector(props: ClientInjectorProps) {
         { keyword: "{{name}}", replacement: name },
       ],
     })
-    .finish([`src/transports/REST/${props.transportName}/index.ts`]);
+    .finish(
+      props.disableOpenFiles
+        ? []
+        : [`src/transports/REST/${props.transportName}/index.ts`]
+    );
 }

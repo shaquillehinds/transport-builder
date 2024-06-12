@@ -112,12 +112,16 @@ type RequestTemplateProps = {
   Name: string;
   method: RequestMethod;
   ClientName: string;
+  returns?: string;
+  requestBody?: string;
 };
 export const requestTemplate = ({
   name,
   Name,
   method,
+  returns,
   ClientName,
+  requestBody,
 }: RequestTemplateProps) => {
   const bodyAllowed =
     method === "post" || method === "patch" || method === "put";
@@ -139,7 +143,7 @@ export async function ${name}(
   }
 }
 
-type ${Name}Body = {}; // define body
+type ${Name}Body = ${requestBody || "{}"}; // define body
 type ${Name}Param = {}; // define param
 type ${Name}Query = {}; // define query
 
@@ -149,6 +153,8 @@ export type ${Name}Props = TransportAxiosRequest<
   ${Name}Query
 >;
 
-export type ${Name}Return = Promise<undefined>; // define return 
+export type ${Name}Return = Promise<${
+    returns || "undefined"
+  }>; // define return 
 `;
 };

@@ -24,4 +24,4 @@ export type {{Name}}Props = TransportAxiosRequest<
   {{Name}}Query
 >;
 
-export type {{Name}}Return = Promise<undefined>; // define return 
+export type {{Name}}Return = Promise<{{Returns}}>; // define return 

@@ -4,6 +4,7 @@ import restClientInjector from "./restRequest.injector";
 import transportPrompt from "../transport.command/transport.prompt";
 import clientPrompt from "../client.command/client.prompt";
 import requestPrompt from "./request.prompt";
+import createRequestFile from "@src/utils/createRequestFile";
 
 export default function requestCommand(program: Command) {
   program
@@ -41,16 +42,7 @@ export default function requestCommand(program: Command) {
             `Please provide the method of the new request "request ${transportName} ${clientName} ${requestName} <requestMethod>"`
           );
         if (type === "rest") {
-          if (
-            !fs.existsSync(
-              `src/transports/REST/${transportName}/${clientName}/requests/${requestName}.ts`
-            )
-          )
-            fs.writeFileSync(
-              `src/transports/REST/${transportName}/${clientName}/requests/${requestName}.ts`,
-              "",
-              "utf-8"
-            );
+          createRequestFile({ transportName, requestName, clientName });
           await restClientInjector({
             transportName,
             clientName,

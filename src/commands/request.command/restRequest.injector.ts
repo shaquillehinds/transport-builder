@@ -8,6 +8,9 @@ interface RequestInjectorProps {
   transportName: string;
   requestName: string;
   requestMethod: RequestMethod;
+  returns?: any;
+  requestBody?: any;
+  disableOpenFiles?: boolean;
 }
 
 export default async function restRequestInjector(props: RequestInjectorProps) {
@@ -46,6 +49,8 @@ export default async function restRequestInjector(props: RequestInjectorProps) {
         name,
         Name,
         method: props.requestMethod,
+        returns: props.returns,
+        requestBody: props.requestBody,
       }),
     })
     .parse(
@@ -63,7 +68,11 @@ export default async function restRequestInjector(props: RequestInjectorProps) {
       { stringTemplate: `export type ${Name} = ${Name}Return` },
       { name: `${ClientName}RequestsReturn` }
     )
-    .finish([
-      `src/transports/REST/${props.transportName}/${props.clientName}/requests/${name}.ts`,
-    ]);
+    .finish(
+      !props.disableOpenFiles
+        ? [
+            `src/transports/REST/${props.transportName}/${props.clientName}/requests/${name}.ts`,
+          ]
+        : []
+    );
 }

@@ -5,6 +5,7 @@ import InjectionPipeline from "tscodeinject";
 
 interface TransportInjectorProps {
   name: string;
+  disableOpenFiles?: boolean;
 }
 
 export default async function restTransportInjector(
@@ -40,5 +41,5 @@ export default async function restTransportInjector(
       templatePath: templatePath("transportIndex"),
       replaceKeywords: [{ keyword: "{{Name}}", replacement: Name }],
     })
-    .finish(["src/transports/transports.ts"]);
+    .finish(props.disableOpenFiles ? [] : ["src/transports/transports.ts"]);
 }

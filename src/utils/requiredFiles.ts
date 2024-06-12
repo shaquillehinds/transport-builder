@@ -10,6 +10,7 @@ export const requiredFolders = [
   "src",
   "src/transports",
   "src/transports/base",
+  "src/transports/base/schemas",
 ] as const;
 export const requiredFiles = [
   "src/transports/index.ts",
