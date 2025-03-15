@@ -1,6 +1,6 @@
 {
   "name": "@shaquillehinds/http-transports-builder",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Create and manipulate http transports from the command line",
   "repository": {
     "type": "git",
