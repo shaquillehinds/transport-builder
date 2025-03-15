@@ -52,7 +52,7 @@ export function dashToTitleCase(string: string) {
 }
 
 export function toTitleCase(string: string) {
-  return titleCase(string.replaceAll(/[-_]/gm, " "));
+  return titleCase(string.replaceAll(/[-_\/]/gm, " ").trim());
 }
 
 export function snakeToCamelCase(string: string) {
@@ -64,7 +64,7 @@ export function dashToCamelCase(string: string) {
 }
 
 export function toCamelCase(string: string) {
-  return camelCase(string.replaceAll(/[-_]/gm, " "));
+  return camelCase(string.replaceAll(/[-_\/]/gm, " ").trim());
 }
 
 /**

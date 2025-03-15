@@ -1,28 +1,32 @@
 import { RequestMethod } from "@src/@types";
 import { toCamelCase, toTitleCase } from "@src/utils/algorithms";
 import { templatePath } from "@src/utils/constants";
-import { requestTemplate } from "@src/utils/constants/templates";
+import { requestTemplate, ValidityRef } from "@src/utils/constants/templates";
 import src from "@src/utils/src";
 import { InjectionPipeline } from "tscodeinject";
 
 interface RequestInjectorProps {
+  method: string;
   clientName: string;
   transportName: string;
   requestName: string;
   requestMethod: RequestMethod;
   returns?: any;
   requestBody?: any;
+  requestParams?: any;
+  requestQuery?: any;
+  validityRef: ValidityRef;
   disableOpenFiles?: boolean;
 }
 
 export default async function restRequestInjector(props: RequestInjectorProps) {
-  const name = toCamelCase(props.requestName);
-  const Name = toTitleCase(name);
+  // const name = toCamelCase(props.requestName);
+  const name = props.method.toLowerCase() === "delete" ? "del" : props.method;
+  const Name = toTitleCase(props.requestName);
   const TransportName = toTitleCase(props.transportName);
   const clientName = toCamelCase(props.clientName);
   const ClientName = toTitleCase(clientName);
 
-  console.log($lf(25), clientName, ClientName, name, Name, TransportName);
   await new InjectionPipeline(
     src(`transports/REST/${props.transportName}/${clientName}/index.ts`)
   )
@@ -55,7 +59,10 @@ export default async function restRequestInjector(props: RequestInjectorProps) {
         Name,
         method: props.requestMethod,
         returns: props.returns,
+        validityRef: props.validityRef,
         requestBody: props.requestBody,
+        requestQuery: props.requestQuery,
+        requestParams: props.requestParams,
       }),
     })
     .parse(
@@ -84,9 +91,4 @@ export default async function restRequestInjector(props: RequestInjectorProps) {
           ]
         : []
     );
-}
-
-function $lf(n: number) {
-  return "$lf|commands/request.command/restRequest.injector.ts:" + n + " >";
-  // Automatically injected by Log Location Injector vscode extension
 }

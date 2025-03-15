@@ -1,5 +1,5 @@
 import { Command } from "commander";
-import fs, { readFileSync } from "fs";
+import fs, { readFileSync, writeFileSync } from "fs";
 import cp from "child_process";
 import checkFiles from "../../utils/fileChecker";
 import * as rf from "../../utils/requiredFiles";
@@ -13,7 +13,7 @@ import restRequestInjector from "../request.command/restRequest.injector";
 import { swaggerPathItemParser } from "@src/utils/swagger.parser";
 import { RequestMethod } from "@src/@types";
 import createRequestFile from "@src/utils/createRequestFile";
-import { toCamelCase } from "@src/utils/algorithms";
+import { toCamelCase, toTitleCase } from "@src/utils/algorithms";
 import src from "@src/utils/src";
 
 export default function schemaCommand(program: Command) {
@@ -75,34 +75,67 @@ export default function schemaCommand(program: Command) {
       const requestNames: Record<string, boolean> = {};
       for (const path in swaggerJSON.paths) {
         const parameters = path.split("/").slice(1);
-        if (path.includes("{")) continue;
-        const clientName = !parameters[0]
+        const validityRef = {
+          seen: false,
+          additionalParams: "",
+          additionalId: false,
+        };
+        let clientName = !parameters[0]
           ? "root"
           : parameters
-              .filter((p) => p.match(/^[A-Za-z0-9-_]*$/))
-              .map((p) => p[0].toUpperCase() + p.slice(1))
+              .map((p) => {
+                if (validityRef.seen) {
+                  if (p[0] === "{") {
+                    const newP = p.slice(1, p.length - 1);
+                    const additionalParams = validityRef.additionalParams;
+                    validityRef.seen = true;
+                    validityRef.additionalParams += "/$" + newP;
+                    validityRef.additionalId = true;
+                    return toTitleCase(additionalParams + toTitleCase(newP));
+                  } else if (!p.includes("{"))
+                    validityRef.additionalParams += "/" + p;
+                  return "";
+                }
+                if (p[0] === "{") {
+                  const newP = p.slice(1, p.length - 1);
+                  validityRef.seen = true;
+                  return toTitleCase(newP);
+                } else if (p.includes("{")) return "";
+                return toTitleCase(p);
+              })
               .join("");
-        console.log($lf(85), parameters, clientName);
+
+        if (validityRef.additionalParams && !validityRef.additionalId) {
+          clientName += toTitleCase(validityRef.additionalParams);
+        }
+
         if (!Number.isNaN(Number(clientName[0]))) continue;
         const pathInfo = swaggerJSON.paths[path];
-        console.warn($lf(88), `restClientInjection ${clientName}`);
         if (!clientNames.includes(clientName))
           await restClientInjector({
-            path,
+            path: path.split("{")[0],
             clientName,
             transportName,
             disableOpenFiles,
           });
         clientNames.push(clientName);
-        console.log($lf(97), "here");
         if (pathInfo) {
           const methodAndData = swaggerPathItemParser({
             clientName,
             path: pathInfo,
-            // lastPathParameter,
             document: swaggerJSON,
           });
           for (const method in methodAndData) {
+            if (validityRef.additionalId)
+              writeFileSync(
+                `./temp/${clientName}${method}.json`,
+                JSON.stringify({
+                  validityRef,
+                  clientName,
+                  method,
+                }),
+                "utf-8"
+              );
             const requestMethod = method as RequestMethod;
             const endpointData = methodAndData[requestMethod];
             if (endpointData) {
@@ -112,15 +145,20 @@ export default function schemaCommand(program: Command) {
               createRequestFile({
                 clientName: toCamelCase(clientName),
                 transportName,
-                requestName: toCamelCase(endpointData.requestName),
+                // requestName: toCamelCase(endpointData.requestName),
+                requestName: method.toLowerCase() === "delete" ? "del" : method,
               });
               await restRequestInjector({
+                method,
                 clientName,
+                validityRef,
                 requestMethod,
                 transportName,
                 requestName: endpointData.requestName,
                 returns: endpointData.returns,
                 requestBody: endpointData.requestBody,
+                requestQuery: endpointData.queryParams,
+                requestParams: endpointData.parameters,
                 disableOpenFiles,
               });
             }
@@ -130,9 +168,4 @@ export default function schemaCommand(program: Command) {
       swaggerJSON.paths;
       process.exit(0);
     });
-}
-
-function $lf(n: number) {
-  return "$lf|commands/schema.command/schema.command.ts:" + n + " >";
-  // Automatically injected by Log Location Injector vscode extension
 }

@@ -106,6 +106,11 @@ export interface Interceptors {
   handleError?: (error: AxiosError) => any;
 }
 `;
+export type ValidityRef = {
+  seen: boolean;
+  additionalParams: string;
+  additionalId: boolean;
+};
 
 type RequestTemplateProps = {
   name: string;
@@ -113,7 +118,10 @@ type RequestTemplateProps = {
   method: RequestMethod;
   ClientName: string;
   returns?: string;
+  validityRef: ValidityRef;
   requestBody?: string;
+  requestQuery?: any;
+  requestParams?: any;
 };
 export const requestTemplate = ({
   name,
@@ -121,11 +129,28 @@ export const requestTemplate = ({
   method,
   returns,
   ClientName,
+  validityRef,
   requestBody,
+  requestQuery,
+  requestParams,
 }: RequestTemplateProps) => {
   const bodyAllowed =
     method === "post" || method === "patch" || method === "put";
   const body = bodyAllowed ? ", body" : "";
+  let url = "/";
+  if (requestParams && !requestParams.includes("{}")) {
+    const param = requestParams.match(/(\w+):/)[1];
+    if (typeof param === "string") {
+      url += `\${param.${param}}`;
+    }
+    if (validityRef.additionalParams) {
+      url += validityRef.additionalParams;
+      if (validityRef.additionalId) {
+        url = url.replace(/\$(\w+)/g, (_, capture1) => `\${param.${capture1}}`);
+      }
+    }
+  }
+
   return `import ${ClientName}Client from "..";
 import { TransportAxiosRequest } from "../../../../base/transports.types";
 
@@ -135,7 +160,7 @@ export async function ${name}(
 ) {
   const { param, query${body} } = requestProps;
   try {
-    const { data } = await this.instance.${method}<${Name}Return>("/"${body});
+    const { data } = await this.instance.${method}<${Name}Return>(\`${url}\`${body}, {params: query});
     return data;
   } catch (error) {
     console.dir({ error, requestProps });
@@ -144,8 +169,8 @@ export async function ${name}(
 }
 
 type ${Name}Body = ${requestBody || "{}"}; // define body
-type ${Name}Param = {}; // define param
-type ${Name}Query = {}; // define query
+type ${Name}Param = ${requestParams || "{}"}; // define param
+type ${Name}Query = ${requestQuery || "{}"}; // define query
 
 export type ${Name}Props = TransportAxiosRequest<
   ${Name}Body,

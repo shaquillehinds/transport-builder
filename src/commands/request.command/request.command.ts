@@ -44,10 +44,16 @@ export default function requestCommand(program: Command) {
         if (type === "rest") {
           createRequestFile({ transportName, requestName, clientName });
           await restClientInjector({
+            method: requestMethod,
             transportName,
             clientName,
             requestMethod,
             requestName,
+            validityRef: {
+              additionalId: false,
+              additionalParams: "",
+              seen: false,
+            },
           });
         }
         process.exit(0);
