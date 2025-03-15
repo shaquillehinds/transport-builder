@@ -16,7 +16,7 @@ export const requiredFiles = [
   "transports/transports.ts",
   "transports/base/HttpClient.ts",
   "transports/base/interceptors.ts",
-  "transports/basetransports.types.ts",
+  "transports/base/transports.types.ts",
 ] as const;
 export const requiredFilesAndFolders = [...requiredFolders, ...requiredFiles];
 export type RequiredFiles = (typeof requiredFiles)[number];
@@ -28,7 +28,7 @@ export const requiredFilesContent: Record<RequiredFiles, string> = {
   "transports/transports.ts": transportsTemplate,
   "transports/base/HttpClient.ts": httpClientTemplate,
   "transports/base/interceptors.ts": interceptorsTemplate,
-  "transports/basetransports.types.ts": transportsTypeTemplate,
+  "transports/base/transports.types.ts": transportsTypeTemplate,
 };
 
 export const requiredRESTFiles = [] as const;
