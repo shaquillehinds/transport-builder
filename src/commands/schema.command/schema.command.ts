@@ -1,5 +1,5 @@
 import { Command } from "commander";
-import fs from "fs";
+import fs, { readFileSync } from "fs";
 import cp from "child_process";
 import checkFiles from "../../utils/fileChecker";
 import * as rf from "../../utils/requiredFiles";
@@ -39,10 +39,16 @@ export default function schemaCommand(program: Command) {
       });
       checkPackages({ requiredPackages: [{ name: "axios" }] });
 
-      let swaggerJSON = (await (await fetch(location)).json()) as
-        | OpenAPIV3.Document
-        | OpenAPIV3_1.Document
-        | string;
+      let swaggerJSON;
+      if (!location.includes("http"))
+        swaggerJSON = JSON.parse(
+          readFileSync(location, { encoding: "utf-8" })
+        ) as OpenAPIV3.Document | OpenAPIV3_1.Document | string;
+      else
+        swaggerJSON = (await (await fetch(location)).json()) as
+          | OpenAPIV3.Document
+          | OpenAPIV3_1.Document
+          | string;
       fs.writeFileSync(
         `src/transports/base/schemas/${transportName}.json`,
         typeof swaggerJSON === "string"
@@ -77,7 +83,7 @@ export default function schemaCommand(program: Command) {
           index--;
         }
         const pathInfo = swaggerJSON.paths[path];
-        console.warn(`restClientInjection ${clientName}`);
+        console.warn($lf(86), `restClientInjection ${clientName}`);
         if (!clientNames.includes(clientName))
           await restClientInjector({
             clientName,
@@ -117,4 +123,9 @@ export default function schemaCommand(program: Command) {
       swaggerJSON.paths;
       process.exit(0);
     });
+}
+
+function $lf(n: number) {
+  return "$lf|commands/schema.command/schema.command.ts:" + n + " >";
+  // Automatically injected by Log Location Injector vscode extension
 }

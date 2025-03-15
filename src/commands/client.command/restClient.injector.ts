@@ -1,5 +1,5 @@
 import { templatePath } from "@src/utils/constants";
-import InjectionPipeline from "tscodeinject";
+import { InjectionPipeline } from "tscodeinject";
 
 interface ClientInjectorProps {
   transportName: string;

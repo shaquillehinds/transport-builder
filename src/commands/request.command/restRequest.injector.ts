@@ -1,7 +1,7 @@
 import { RequestMethod } from "@src/@types";
 import { templatePath } from "@src/utils/constants";
 import { requestTemplate } from "@src/utils/constants/templates";
-import InjectionPipeline from "tscodeinject";
+import { InjectionPipeline } from "tscodeinject";
 
 interface RequestInjectorProps {
   clientName: string;
