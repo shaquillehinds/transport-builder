@@ -611,9 +611,9 @@ camelcase@^6.3.0:
   integrity sha512-Gmy6FhYlCY7uOElZUSbxo2UCDH8owEk996gkbrpsgGtrJLM3J7jGxl9Ic7Qwwj4ivOE5AWZWRMecDdF7hqGjFA==
 
 caniuse-lite@^1.0.30001688:
-  version "1.0.30001704"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001704.tgz#6644fe909d924ac3a7125e8a0ab6af95b1f32990"
-  integrity sha512-+L2IgBbV6gXB4ETf0keSvLr7JUrRVbIaB/lrQ1+z8mRcQiisG5k+lG6O4n6Y5q6f5EuNfaYXKgymucphlEXQew==
+  version "1.0.30001705"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001705.tgz#dc3510bcdef261444ca944b7be9c8d0bb7fafeef"
+  integrity sha512-S0uyMMiYvA7CxNgomYBwwwPUnWzFD83f3B1ce5jHUfHTH//QL6hHsreI8RVC5606R4ssqravelYO5TU6t8sEyg==
 
 chalk-animation@^2.0.3:
   version "2.0.3"
@@ -791,9 +791,9 @@ dunder-proto@^1.0.1:
     gopd "^1.2.0"
 
 electron-to-chromium@^1.5.73:
-  version "1.5.118"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.118.tgz#064bda9bfea1611074288adb1fdd1f787a131e21"
-  integrity sha512-yNDUus0iultYyVoEFLnQeei7LOQkL8wg8GQpkPCRrOlJXlcCwa6eGKZkxQ9ciHsqZyYbj8Jd94X1CTPzGm+uIA==
+  version "1.5.119"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.119.tgz#4e105e419209b33e1c44b4d1b5fc6fb27fac0209"
+  integrity sha512-Ku4NMzUjz3e3Vweh7PhApPrZSS4fyiCIbcIrG9eKrriYVLmbMepETR/v6SU7xPm98QTqMSYiCwfO89QNjXLkbQ==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
@@ -1850,10 +1850,10 @@ tsc-alias@^1.8.7:
     normalize-path "^3.0.0"
     plimit-lit "^1.2.6"
 
-tscodeinject@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/tscodeinject/-/tscodeinject-3.1.0.tgz#f9fe80c591e7e424852d980f8f16e373b6043b77"
-  integrity sha512-VeobU9nOxvT6RDI+95Ka/b0/Q7YHDVylQCyP8p9FpbiJywvcgvyyn/+tWlHs9MUT3P6do94tNF9GQB1/6Tg8fw==
+tscodeinject@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/tscodeinject/-/tscodeinject-4.0.0.tgz#700e59758ebe77b8590d2b7cb0c56677fd5af2d2"
+  integrity sha512-xNA9J86UowkqynlBRt6u8sCIC/J/oqYcWfK4mXUI4oQJnNJbVvO+MQ2KbiapVjnGXNJM35UD2OBPuQvWuEuVsg==
   dependencies:
     chalk "4.1.2"
     chalk-animation "^2.0.3"

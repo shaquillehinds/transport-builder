@@ -16,10 +16,10 @@ export default async function restClientInjector(props: ClientInjectorProps) {
   const Name = toTitleCase(name);
   const TransportName = toTitleCase(props.transportName);
 
-  console.log($lf(19), clientName, name, Name, TransportName);
   //@ts-ignore
   await new InjectionPipeline(
-    src(`transports/REST/${props.transportName}/index.ts`)
+    src(`transports/REST/${props.transportName}/index.ts`),
+    { disableLogs: true }
   )
     .injectImport({
       importName: `${Name}Client`,
@@ -65,9 +65,4 @@ export default async function restClientInjector(props: ClientInjectorProps) {
         ? []
         : [src(`transports/REST/${props.transportName}/index.ts`)]
     );
-}
-
-function $lf(n: number) {
-  return "$lf|commands/client.command/restClient.injector.ts:" + n + " >";
-  // Automatically injected by Log Location Injector vscode extension
 }

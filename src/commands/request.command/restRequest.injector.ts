@@ -28,7 +28,8 @@ export default async function restRequestInjector(props: RequestInjectorProps) {
   const ClientName = toTitleCase(clientName);
 
   await new InjectionPipeline(
-    src(`transports/REST/${props.transportName}/${clientName}/index.ts`)
+    src(`transports/REST/${props.transportName}/${clientName}/index.ts`),
+    { disableLogs: true }
   )
     .injectClassMember(
       {

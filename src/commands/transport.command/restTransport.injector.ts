@@ -22,10 +22,9 @@ export default async function restTransportInjector(
   const name = props.name.trim();
   const Name = name[0].toUpperCase() + name.slice(1);
 
-  console.log($lf(25), InjectionPipeline);
-
   const restTransportPipeline = new InjectionPipeline(
-    src("transports/transports.ts")
+    src("transports/transports.ts"),
+    { disableLogs: true }
   );
 
   restTransportPipeline
@@ -47,9 +46,4 @@ export default async function restTransportInjector(
       replaceKeywords: [{ keyword: "{{Name}}", replacement: Name }],
     })
     .finish(props.disableOpenFiles ? [] : [src("transports/transports.ts")]);
-}
-
-function $lf(n: number) {
-  return "$lf|commands/transport.command/restTransport.injector.ts:" + n + " >";
-  // Automatically injected by Log Location Injector vscode extension
 }
