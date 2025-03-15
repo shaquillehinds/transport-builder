@@ -126,16 +126,6 @@ export default function schemaCommand(program: Command) {
             document: swaggerJSON,
           });
           for (const method in methodAndData) {
-            if (validityRef.additionalId)
-              writeFileSync(
-                `./temp/${clientName}${method}.json`,
-                JSON.stringify({
-                  validityRef,
-                  clientName,
-                  method,
-                }),
-                "utf-8"
-              );
             const requestMethod = method as RequestMethod;
             const endpointData = methodAndData[requestMethod];
             if (endpointData) {
