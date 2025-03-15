@@ -22,12 +22,10 @@ export default async function restTransportInjector(
   const name = props.name.trim();
   const Name = name[0].toUpperCase() + name.slice(1);
 
-  const restTransportPipeline = new InjectionPipeline(
-    src("transports/transports.ts"),
-    { disableLogs: true }
-  );
-
-  restTransportPipeline
+  await new InjectionPipeline(src("transports/transports.ts"), {
+    disableLogs: true,
+  })
+    .parse()
     .injectImport({
       importName: `${Name}Transport`,
       source: `./REST/${name}`,
