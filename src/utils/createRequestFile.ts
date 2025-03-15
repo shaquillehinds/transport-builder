@@ -1,4 +1,5 @@
 import { existsSync, writeFileSync } from "fs";
+import src from "./src";
 
 type CreateRequestFileProps = {
   transportName: string;
@@ -7,14 +8,8 @@ type CreateRequestFileProps = {
 };
 
 export default function createRequestFile(props: CreateRequestFileProps) {
-  if (
-    !existsSync(
-      `src/transports/REST/${props.transportName}/${props.clientName}/requests/${props.requestName}.ts`
-    )
-  )
-    writeFileSync(
-      `src/transports/REST/${props.transportName}/${props.clientName}/requests/${props.requestName}.ts`,
-      "",
-      "utf-8"
-    );
+  const path = src(
+    `transports/REST/${props.transportName}/${props.clientName}/requests/${props.requestName}.ts`
+  );
+  if (!existsSync(path)) writeFileSync(path, "", "utf-8");
 }

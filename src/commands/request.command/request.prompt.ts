@@ -1,5 +1,6 @@
 import { TransportType } from "@src/@types";
 import namesRetriever from "@src/utils/namesRetriever";
+import src from "@src/utils/src";
 import inquirer from "inquirer";
 // client <rest|graphql> <transportName> <clientName>
 
@@ -37,9 +38,11 @@ const clientName = async (type: TransportType, transportName: string) =>
       message: "Select the client this request belongs to:",
       loop: true,
       choices: namesRetriever({
-        dirPath: `src/transports/${
-          type === "graphql" ? "GRAPHQL" : "REST"
-        }/${transportName}`,
+        dirPath: src(
+          `transports/${
+            type === "graphql" ? "GRAPHQL" : "REST"
+          }/${transportName}`
+        ),
         rmIndex: true,
         rmExt: true,
       }).map((f) => ({ name: f, value: f })),

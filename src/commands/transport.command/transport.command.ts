@@ -5,6 +5,7 @@ import * as rf from "../../utils/requiredFiles";
 import checkPackages from "../../utils/packageChecker";
 import restTransportInjector from "./restTransport.injector";
 import transportPrompt from "./transport.prompt";
+import src from "@src/utils/src";
 
 export default function transportCommand(program: Command) {
   program
@@ -31,7 +32,7 @@ export default function transportCommand(program: Command) {
       });
       checkPackages({ requiredPackages: [{ name: "axios" }] });
       if (type === "rest") {
-        if (fs.existsSync("src/transports/REST/" + name))
+        if (fs.existsSync(src("transports/REST/" + name)))
           throw new Error(name + " already created");
         await restTransportInjector({ name });
       }

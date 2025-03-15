@@ -1,21 +1,25 @@
+import { toCamelCase, toTitleCase } from "@src/utils/algorithms";
 import { templatePath } from "@src/utils/constants";
+import src from "@src/utils/src";
 import { InjectionPipeline } from "tscodeinject";
 
 interface ClientInjectorProps {
   transportName: string;
   clientName: string;
+  path: string;
   disableOpenFiles?: boolean;
 }
 
 export default async function restClientInjector(props: ClientInjectorProps) {
-  const name = props.clientName.trim();
-  const Name = name[0].toUpperCase() + name.slice(1);
-  const TransportName =
-    props.transportName[0].toUpperCase() + props.transportName.slice(1);
+  const clientName = props.clientName.trim();
+  const name = toCamelCase(clientName);
+  const Name = toTitleCase(name);
+  const TransportName = toTitleCase(props.transportName);
 
+  console.log($lf(19), clientName, name, Name, TransportName);
   //@ts-ignore
   await new InjectionPipeline(
-    `src/transports/REST/${props.transportName}/index.ts`
+    src(`transports/REST/${props.transportName}/index.ts`)
   )
     .injectImport({
       importName: `${Name}Client`,
@@ -28,13 +32,15 @@ export default async function restClientInjector(props: ClientInjectorProps) {
     )
     .injectClassConstructor(
       {
-        stringTemplate: `this.${name} = new ${Name}Client(baseUrl + "/${name}", interceptors); // make sure the endpoint is correct`,
+        stringTemplate: `this.${name} = new ${Name}Client(baseUrl + "${props.path}", interceptors);`,
       },
       { name: `${TransportName}Transport` }
     )
-    .injectDirectory(`src/transports/REST/${props.transportName}/${name}`)
+    .injectDirectory(src(`transports/REST/${props.transportName}/${name}`))
     .injectFileFromTemplate({
-      newFilePath: `src/transports/REST/${props.transportName}/${name}/index.ts`,
+      newFilePath: src(
+        `transports/REST/${props.transportName}/${name}/index.ts`
+      ),
       templatePath: templatePath("clientIndex"),
       replaceKeywords: [
         { keyword: "{{Name}}", replacement: Name },
@@ -42,10 +48,12 @@ export default async function restClientInjector(props: ClientInjectorProps) {
       ],
     })
     .injectDirectory(
-      `src/transports/REST/${props.transportName}/${name}/requests`
+      src(`transports/REST/${props.transportName}/${name}/requests`)
     )
     .injectFileFromTemplate({
-      newFilePath: `src/transports/REST/${props.transportName}/${name}/requests/index.ts`,
+      newFilePath: src(
+        `transports/REST/${props.transportName}/${name}/requests/index.ts`
+      ),
       templatePath: templatePath("requestsIndex"),
       replaceKeywords: [
         { keyword: "{{Name}}", replacement: Name },
@@ -55,6 +63,11 @@ export default async function restClientInjector(props: ClientInjectorProps) {
     .finish(
       props.disableOpenFiles
         ? []
-        : [`src/transports/REST/${props.transportName}/index.ts`]
+        : [src(`transports/REST/${props.transportName}/index.ts`)]
     );
+}
+
+function $lf(n: number) {
+  return "$lf|commands/client.command/restClient.injector.ts:" + n + " >";
+  // Automatically injected by Log Location Injector vscode extension
 }

@@ -3,6 +3,7 @@ import fs from "fs";
 import restClientInjector from "./restClient.injector";
 import transportPrompt from "../transport.command/transport.prompt";
 import clientPrompt from "./client.prompt";
+import src from "@src/utils/src";
 
 export default function clientCommand(program: Command) {
   program
@@ -26,9 +27,15 @@ export default function clientCommand(program: Command) {
           `Please provide the name of the new client "client ${type} ${transportName} <clientName>"`
         );
       if (type === "rest") {
-        if (fs.existsSync(`src/transports/REST/${transportName}/${clientName}`))
+        if (
+          fs.existsSync(src(`transports/REST/${transportName}/${clientName}`))
+        )
           throw new Error(clientName + " already created");
-        await restClientInjector({ transportName, clientName });
+        await restClientInjector({
+          transportName,
+          clientName,
+          path: `/${clientName}`,
+        });
       }
       process.exit(0);
     });

@@ -23,7 +23,6 @@ type SwaggerPathItemParserProps = {
   document: OpenAPIV3.Document | OpenAPIV3_1.Document;
   clientName: string;
   path: PathItemObject;
-  lastPathParameter: string;
 };
 
 type SwaggerPathItemParserReturn = Partial<Record<RequestMethod, EndpointData>>;
@@ -45,17 +44,14 @@ export function swaggerPathItemParser(
           requestName = props.clientName + firstLetterCap(requestName);
       }
     } else {
-      requestName =
-        method +
-        firstLetterCap(props.clientName) +
-        firstLetterCap(props.lastPathParameter);
+      requestName = method + firstLetterCap(props.clientName);
     }
     endpointData[method] = {
       requestName,
       returns: undefined,
     };
     for (const response in methodRequest.responses) {
-      if (response !== "default") {
+      if (response[0] === "2") {
         const responseData = methodRequest.responses[response]!;
         if ("content" in responseData && responseData.content) {
           for (const mime in responseData.content) {
@@ -66,10 +62,8 @@ export function swaggerPathItemParser(
                 document: props.document,
               });
             } else if (schema && "$ref" in schema) {
-              endpointData[method]!.returns = getRef(
-                schema.$ref,
-                props.document
-              );
+              const schemaRefReturn = getRef(schema.$ref, props.document);
+              endpointData[method]!.returns = schemaRefReturn;
             }
           }
         }
@@ -128,7 +122,7 @@ export function schemaObjectParser({
       break;
     }
     case "object":
-      if (object.properties && "type" in object.properties) {
+      if (object.properties) {
         const properties: Record<string, any> = {};
         for (const prop in object.properties) {
           properties[prop] = schemaObjectParser({
@@ -165,4 +159,9 @@ function getRef(
         document: document,
       });
   } else return refName;
+}
+
+function $lf(n: number) {
+  return "$lf|src/utils/swagger.parser.ts:" + n + " >";
+  // Automatically injected by Log Location Injector vscode extension
 }

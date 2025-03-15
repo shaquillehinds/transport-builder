@@ -25,16 +25,46 @@ export function firstLetterCap(word?: string) {
 }
 
 export function titleCase(words: string) {
-  if (!words) return;
+  if (!words) return "";
   let newWords = "";
   words.split(" ").forEach((word) => {
-    newWords += word[0].toUpperCase() + word.slice(1) + " ";
+    newWords += word[0].toUpperCase() + word.slice(1);
   });
   return newWords.trim();
 }
 
+export function camelCase(words: string) {
+  if (!words) return "";
+  let newWords = "";
+  words.split(" ").forEach((word) => {
+    newWords += word[0].toUpperCase() + word.slice(1);
+  });
+  const trimmed = newWords.trim();
+  return trimmed[0].toLowerCase() + trimmed.slice(1);
+}
+
 export function snakeToTitleCase(string: string) {
   return titleCase(string.replaceAll(/_/gm, " "));
+}
+
+export function dashToTitleCase(string: string) {
+  return titleCase(string.replaceAll(/-/gm, " "));
+}
+
+export function toTitleCase(string: string) {
+  return titleCase(string.replaceAll(/[-_]/gm, " "));
+}
+
+export function snakeToCamelCase(string: string) {
+  return camelCase(string.replaceAll(/_/gm, " "));
+}
+
+export function dashToCamelCase(string: string) {
+  return camelCase(string.replaceAll(/-/gm, " "));
+}
+
+export function toCamelCase(string: string) {
+  return camelCase(string.replaceAll(/[-_]/gm, " "));
 }
 
 /**

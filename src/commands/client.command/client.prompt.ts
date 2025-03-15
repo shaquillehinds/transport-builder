@@ -1,5 +1,6 @@
 import { TransportType } from "@src/@types";
 import namesRetriever from "@src/utils/namesRetriever";
+import src from "@src/utils/src";
 import inquirer from "inquirer";
 // client <rest|graphql> <transportName> <clientName>
 
@@ -20,7 +21,7 @@ const transportName = async (type: TransportType) =>
       message: "Select the transport this client belongs to:",
       loop: true,
       choices: namesRetriever({
-        dirPath: `src/transports/${type === "graphql" ? "GRAPHQL" : "REST"}`,
+        dirPath: src(`transports/${type === "graphql" ? "GRAPHQL" : "REST"}`),
       }).map((f) => ({ name: f, value: f })),
     })
   ).transportName;

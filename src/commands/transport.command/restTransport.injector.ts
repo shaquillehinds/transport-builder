@@ -1,6 +1,7 @@
 import { templatePath } from "@src/utils/constants";
 import checkFiles from "@src/utils/fileChecker";
 import * as rf from "@src/utils/requiredFiles";
+import src from "@src/utils/src";
 import { InjectionPipeline } from "tscodeinject";
 interface TransportInjectorProps {
   name: string;
@@ -21,10 +22,10 @@ export default async function restTransportInjector(
   const name = props.name.trim();
   const Name = name[0].toUpperCase() + name.slice(1);
 
-  console.log($lf(24), InjectionPipeline);
+  console.log($lf(25), InjectionPipeline);
 
   const restTransportPipeline = new InjectionPipeline(
-    "src/transports/transports.ts"
+    src("transports/transports.ts")
   );
 
   restTransportPipeline
@@ -39,13 +40,13 @@ export default async function restTransportInjector(
       },
       { name: "transports" }
     )
-    .injectDirectory(`src/transports/REST/${name}`)
+    .injectDirectory(src(`transports/REST/${name}`))
     .injectFileFromTemplate({
-      newFilePath: `src/transports/REST/${name}/index.ts`,
+      newFilePath: src(`transports/REST/${name}/index.ts`),
       templatePath: templatePath("transportIndex"),
       replaceKeywords: [{ keyword: "{{Name}}", replacement: Name }],
     })
-    .finish(props.disableOpenFiles ? [] : ["src/transports/transports.ts"]);
+    .finish(props.disableOpenFiles ? [] : [src("transports/transports.ts")]);
 }
 
 function $lf(n: number) {
