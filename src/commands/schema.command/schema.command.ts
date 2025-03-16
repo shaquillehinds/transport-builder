@@ -59,7 +59,7 @@ export default function schemaCommand(program: Command) {
         "utf-8"
       );
       cp.execSync(
-        `yarn openapi-typescript ${location} -o src/transports/base/schemas/${transportName}.types.ts`,
+        `yarn openapi-typescript ${location} -o ${src("transports/base/schemas/" + transportName + ".types.ts")}`,
         {
           encoding: "utf-8",
           stdio: "inherit",
